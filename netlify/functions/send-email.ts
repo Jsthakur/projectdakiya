@@ -46,14 +46,14 @@ export const handler: Handler = async (event) => {
       };
     }
     const userMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.SMTP_FROM,
       to,
       subject: 'Thank you for contacting us',
       html: `<p>Hi ${name},</p><p>Thank you for reaching out! We will get back to you shortly.</p>`,
     };
   
     const adminMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: process.env.SMTP_FROM,
       to: 'contact@gyarsi.com',
       subject: `New Inquiry: ${subject}`,
       html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${to}</p><p><strong>Message:</strong> ${text}</p>`,
