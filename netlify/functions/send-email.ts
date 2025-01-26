@@ -65,7 +65,7 @@ export const handler: Handler = async (event) => {
     //   text,
     // });
 
-    //await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(userMailOptions);
     await transporter.sendMail(adminMailOptions);
 
     return {
