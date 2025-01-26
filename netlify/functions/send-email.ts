@@ -36,7 +36,7 @@ export const handler: Handler = async (event) => {
   }
 
   try {
-    const { to, subject, text } = JSON.parse(event.body || '{}');
+    const {name, to, subject, text } = JSON.parse(event.body || '{}');
 
     if (!to || !subject || !text) {
       return {
@@ -45,13 +45,28 @@ export const handler: Handler = async (event) => {
         body: JSON.stringify({ message: 'Missing required fields' }),
       };
     }
-
-    await transporter.sendMail({
-      from: process.env.SMTP_FROM,
+    const userMailOptions = {
+      from: process.env.EMAIL_USER,
       to,
-      subject,
-      text,
-    });
+      subject: 'Thank you for contacting us',
+      html: `<p>Hi ${name},</p><p>Thank you for reaching out! We will get back to you shortly.</p>`,
+    };
+  
+    const adminMailOptions = {
+      from: process.env.EMAIL_USER,
+      to: 'contact@gyarsi.com',
+      subject: `New Inquiry: ${subject}`,
+      html: `<p><strong>Name:</strong> ${name}</p><p><strong>Email:</strong> ${to}</p><p><strong>Message:</strong> ${text}</p>`,
+    };
+    // await transporter.sendMail({
+    //   from: process.env.SMTP_FROM,
+    //   to,
+    //   subject,
+    //   text,
+    // });
+
+    await transporter.sendMail(userMailOptions);
+    await transporter.sendMail(adminMailOptions);
 
     return {
       statusCode: 200,
