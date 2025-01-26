@@ -11,9 +11,21 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+// List of allowed origins
+const allowedOrigins = [
+  'http://localhost:3000', 
+  'https://example.com', 
+  'https://another-example.com',
+];
+
 export const handler: Handler = async (event) => {
+  const origin = event.headers.origin;
+
+  // Determine if the origin is allowed
+  const isAllowedOrigin = allowedOrigins.includes(origin || '');
+
   const corsHeaders = {
-    'Access-Control-Allow-Origin': '*', // Allow all origins
+    'Access-Control-Allow-Origin': isAllowedOrigin ? origin : 'null',
     'Access-Control-Allow-Methods': 'POST, OPTIONS',
     'Access-Control-Allow-Headers': 'Content-Type',
   };

@@ -12,17 +12,15 @@ const transporter = nodemailer.createTransport({
 });
 
 export const handler: Handler = async (event) => {
-  const corsHeaders = {
-    'Access-Control-Allow-Origin': '*', // Allow all origins
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Access-Control-Allow-Headers': 'Content-Type',
-  };
-
   if (event.httpMethod === 'OPTIONS') {
     // Handle CORS preflight request
     return {
       statusCode: 200,
-      headers: corsHeaders,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // Replace '*' with specific origin if needed
+        'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      },
       body: '',
     };
   }
@@ -30,7 +28,7 @@ export const handler: Handler = async (event) => {
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
-      headers: corsHeaders,
+      
       body: JSON.stringify({ message: 'Method not allowed' }),
     };
   }
@@ -41,7 +39,6 @@ export const handler: Handler = async (event) => {
     if (!to || !subject || !text) {
       return {
         statusCode: 400,
-        headers: corsHeaders,
         body: JSON.stringify({ message: 'Missing required fields' }),
       };
     }
@@ -55,15 +52,13 @@ export const handler: Handler = async (event) => {
 
     return {
       statusCode: 200,
-      headers: corsHeaders,
       body: JSON.stringify({ message: 'Email sent successfully' }),
     };
   } catch (error) {
     console.error('Error sending email:', error);
     return {
       statusCode: 500,
-      headers: corsHeaders,
       body: JSON.stringify({ message: 'Error sending email' }),
     };
   }
-};
+}
